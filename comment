@@ -145,3 +145,8 @@ class CommentSpider(scrapy.Spider):
 # NEXT PAGE 1------------ None
 # NEXT PAGE 2------------ None
 # 2021-03-07 21:57:59 [scrapy.core.engine] INFO: Closing spider (finished)
+
+现在的问题是，有时候请求页面会没有返回应该返回的信息，虽然status还是200，但是回来的页面没有我想要的评论信息和next page的信息；如果重新请求一次的话基本就可以了，比如我手动把上面的NEXT PAGE URL 2
+地址复制到start_request里面重新开始程序。
+我想问一下有没有办法让它如果请求返回的页面里没有抓到 comment信息或者没有抓到next page信息，就再重新请求1-2次，如果都没有的话再停下来这样。
+我想不到可以怎么加。。。
