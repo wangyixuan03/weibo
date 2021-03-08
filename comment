@@ -5,6 +5,7 @@ import json
 import time
 import random
 
+
 class CommentSpider(scrapy.Spider):
     name = 'comment'
     allowed_domains = ['weibo.com']
@@ -12,30 +13,26 @@ class CommentSpider(scrapy.Spider):
 
     def start_requests(sefl):
         rnd=int(time.time()*1000)
-        yield scrapy.Request(url=f"https://weibo.com/aj/v6/comment/big?ajwvr=6&id=4610060338070136&from=singleWeiBo&__rnd={rnd}",
+        yield scrapy.Request(url=f"https://weibo.com/aj/v6/comment/big?ajwvr=6&id=4610060338070136&root_comment_max_id=4610061948948536&root_comment_max_id_type=1&root_comment_ext_param=&page=1108&filter=hot&sum_comment_number=70279&filter_tips_before=1&from=singleWeiBo&__rnd={rnd}",
         cookies={
-        'UOR': 'www.google.com,weibo.com,www.google.com', 
-        'SINAGLOBAL': '6279898746268.473.1614912577932', 
-        'httpsupgrade_ab': 'SSL', 
-        'SCF': 'Ajb67KLHiO0qImsFIxRjQbd3nT_UmKemtUSu1f5jgN2V3sFhfunTUGWS2G1elB5WVnVwY5JRwHE0er2jV5Hf16I.', 
-        '_s_tentry': 'login.sina.com.cn', 
-        'Apache': '6868845359311.868.1614983355227', 
-        'ULV': '1614983355253:2:2:2:6868845359311.868.1614983355227:1614912577946', 
-        'webim_unReadCount': '%7B%22time%22%3A1614996925159%2C%22dm_pub_total%22%3A0%2C%22chat_group_client%22%3A0%2C%22chat_group_notice%22%3A0%2C%22allcountNum%22%3A0%2C%22msgbox%22%3A0%7D', 
-        'login_sid_t': 'a06dc228d9112a34076f7cffafa40e1e', 
-        '_ga': 'GA1.2.1528537132.1614996935', 
-        '_gid': 'GA1.2.184499515.1614996935', 
-        '__gads': 'ID', 
-        'wb_view_log': '1920*10801', 
-        'cross_origin_proto': 'SSL', 
-        'WBStorage': '8daec78e6a891122|undefined', 
-        'SUB': '_2A25NQFvlDeRhGeBJ41oS8izNyjWIHXVuNMotrDV8PUNbmtAfLVOmkW9NRieR5n7GLeNomWPBLXN27bWZUDpUX4zt', 
-        'SUBP': '0033WrSXqPxfM725Ws9jqgMF55529P9D9WWY8LoD_yQ7L1NOo1.hBwvF5JpX5KzhUgL.FoqN1hn0eozpeK.2dJLoI0YLxKBLB.zLBKBLxKBLB.2LB.2LxKnL1h5LBoeLxK.LBonLBKeLxKML1-2L1hBLxK-LB.qLB-zLxKBLBo.L1K5t', 
-        'ALF': '1646616372', 
-        'SSOLoginState': '1615080373', 
-        'wvr': '6', 
-        'wb_view_log_6788322119': '1920*10801'
-        },
+                    'UOR': 'www.google.com,weibo.com,www.google.com', 
+                    'SINAGLOBAL': '6279898746268.473.1614912577932', 
+                    'httpsupgrade_ab': 'SSL', 
+                    '_ga': 'GA1.2.1528537132.1614996935', 
+                    '__gads': 'ID', 
+                    'wvr': '6', 
+                    'wb_view_log_6788322119': '1920*10801', 
+                    'wb_view_log': '1920*10801', 
+                    'SUBP': '0033WrSXqPxfM725Ws9jqgMF55529P9D9WWY8LoD_yQ7L1NOo1.hBwvF5JpX5KMhUgL.FoqN1hn0eozpeK.2dJLoI0YLxKBLB.zLBKBLxKBLB.2LB.2LxKnL1h5LBoeLxK.LBonLBKeLxKML1-2L1hBLxK-LB.qLB-zLxKBLBo.L1K5t', 
+                    'ALF': '1646686702', 
+                    'SSOLoginState': '1615150703', 
+                    'SCF': 'Ajb67KLHiO0qImsFIxRjQbd3nT_UmKemtUSu1f5jgN2VUa34Y_gS_ld0swTTGBq_hpRWtPcICXKZc1D9W8Xc5K0.', 
+                    'SUB': '_2A25NQU4hDeRhGeBJ41oS8izNyjWIHXVuNzjprDV8PUNbmtAfLXb4kW9NRieR5m_PL2pMQN1kYpX5PqGVAi8AdH8w', 
+                    '_s_tentry': 'login.sina.com.cn', 
+                    'Apache': '9579290975284.303.1615150710315', 
+                    'ULV': '1615150710320:3:3:1:9579290975284.303.1615150710315:1614983355253', 
+                    'webim_unReadCount': '%7B%22time%22%3A1615167003919%2C%22dm_pub_total%22%3A0%2C%22chat_group_client%22%3A0%2C%22chat_group_notice%22%3A0%2C%22allcountNum%22%3A2%2C%22msgbox%22%3A0%7D'
+                    },
         headers={
             'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36'        
         })
@@ -49,18 +46,23 @@ class CommentSpider(scrapy.Spider):
         html=data.get('html')  
         #print(html)  
         sel=Selector(text=html)    
-        comments=sel.xpath("//div[@node-type='root_comment']")
+        #weibo_id=sel.xpath("//div[@class='WB_detail']//div[@class='WB_from S_txt2']/a[1]/@name").get()
+        comments=sel.xpath("//div[@node-type='root_comment']") 
         for comment in comments:
             id_num=comment.xpath(".//div[@class='WB_text']/a[1]/@usercard").get()
             name=comment.xpath(".//div[@class='WB_text']/a[1]/text()").get()
+            fan_title=comment.xpath(".//div[@class='WB_text']/a[2]/@title").get()
             yield {
+                
                 'id':id_num,
-                'name':name
+                'name':name,
+                'fan_title':fan_title
             }
         next_page_1=sel.xpath("//div[@node-type='comment_loading']/@action-data").get()
         print('NEXT PAGE 1------------',next_page_1)
         next_page_2=sel.xpath("//a[@action-type='click_more_comment']/@action-data").get()
         print('NEXT PAGE 2------------',next_page_2)
+        
         
         if next_page_1:
             time.sleep(random.uniform(1, 4))
@@ -74,28 +76,24 @@ class CommentSpider(scrapy.Spider):
                     'handle_httpstatus_list':[302]
                 },
                 cookies={
-                'UOR': 'www.google.com,weibo.com,www.google.com', 
-                'SINAGLOBAL': '6279898746268.473.1614912577932', 
-                'httpsupgrade_ab': 'SSL', 
-                'SCF': 'Ajb67KLHiO0qImsFIxRjQbd3nT_UmKemtUSu1f5jgN2V3sFhfunTUGWS2G1elB5WVnVwY5JRwHE0er2jV5Hf16I.', 
-                '_s_tentry': 'login.sina.com.cn', 
-                'Apache': '6868845359311.868.1614983355227', 
-                'ULV': '1614983355253:2:2:2:6868845359311.868.1614983355227:1614912577946', 
-                'webim_unReadCount': '%7B%22time%22%3A1614996925159%2C%22dm_pub_total%22%3A0%2C%22chat_group_client%22%3A0%2C%22chat_group_notice%22%3A0%2C%22allcountNum%22%3A0%2C%22msgbox%22%3A0%7D', 
-                'login_sid_t': 'a06dc228d9112a34076f7cffafa40e1e', 
-                '_ga': 'GA1.2.1528537132.1614996935', 
-                '_gid': 'GA1.2.184499515.1614996935', 
-                '__gads': 'ID', 
-                'wb_view_log': '1920*10801', 
-                'cross_origin_proto': 'SSL', 
-                'WBStorage': '8daec78e6a891122|undefined', 
-                'SUB': '_2A25NQFvlDeRhGeBJ41oS8izNyjWIHXVuNMotrDV8PUNbmtAfLVOmkW9NRieR5n7GLeNomWPBLXN27bWZUDpUX4zt', 
-                'SUBP': '0033WrSXqPxfM725Ws9jqgMF55529P9D9WWY8LoD_yQ7L1NOo1.hBwvF5JpX5KzhUgL.FoqN1hn0eozpeK.2dJLoI0YLxKBLB.zLBKBLxKBLB.2LB.2LxKnL1h5LBoeLxK.LBonLBKeLxKML1-2L1hBLxK-LB.qLB-zLxKBLBo.L1K5t', 
-                'ALF': '1646616372', 
-                'SSOLoginState': '1615080373', 
-                'wvr': '6', 
-                'wb_view_log_6788322119': '1920*10801'
-                },
+                    'UOR': 'www.google.com,weibo.com,www.google.com', 
+                    'SINAGLOBAL': '6279898746268.473.1614912577932', 
+                    'httpsupgrade_ab': 'SSL', 
+                    '_ga': 'GA1.2.1528537132.1614996935', 
+                    '__gads': 'ID', 
+                    'wvr': '6', 
+                    'wb_view_log_6788322119': '1920*10801', 
+                    'wb_view_log': '1920*10801', 
+                    'SUBP': '0033WrSXqPxfM725Ws9jqgMF55529P9D9WWY8LoD_yQ7L1NOo1.hBwvF5JpX5KMhUgL.FoqN1hn0eozpeK.2dJLoI0YLxKBLB.zLBKBLxKBLB.2LB.2LxKnL1h5LBoeLxK.LBonLBKeLxKML1-2L1hBLxK-LB.qLB-zLxKBLBo.L1K5t', 
+                    'ALF': '1646686702', 
+                    'SSOLoginState': '1615150703', 
+                    'SCF': 'Ajb67KLHiO0qImsFIxRjQbd3nT_UmKemtUSu1f5jgN2VUa34Y_gS_ld0swTTGBq_hpRWtPcICXKZc1D9W8Xc5K0.', 
+                    'SUB': '_2A25NQU4hDeRhGeBJ41oS8izNyjWIHXVuNzjprDV8PUNbmtAfLXb4kW9NRieR5m_PL2pMQN1kYpX5PqGVAi8AdH8w', 
+                    '_s_tentry': 'login.sina.com.cn', 
+                    'Apache': '9579290975284.303.1615150710315', 
+                    'ULV': '1615150710320:3:3:1:9579290975284.303.1615150710315:1614983355253', 
+                    'webim_unReadCount': '%7B%22time%22%3A1615167003919%2C%22dm_pub_total%22%3A0%2C%22chat_group_client%22%3A0%2C%22chat_group_notice%22%3A0%2C%22allcountNum%22%3A2%2C%22msgbox%22%3A0%7D'
+                    },
                 headers={
                     'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36'        
                 }
@@ -116,32 +114,34 @@ class CommentSpider(scrapy.Spider):
                     'UOR': 'www.google.com,weibo.com,www.google.com', 
                     'SINAGLOBAL': '6279898746268.473.1614912577932', 
                     'httpsupgrade_ab': 'SSL', 
-                    'SCF': 'Ajb67KLHiO0qImsFIxRjQbd3nT_UmKemtUSu1f5jgN2V3sFhfunTUGWS2G1elB5WVnVwY5JRwHE0er2jV5Hf16I.', 
-                    '_s_tentry': 'login.sina.com.cn', 
-                    'Apache': '6868845359311.868.1614983355227', 
-                    'ULV': '1614983355253:2:2:2:6868845359311.868.1614983355227:1614912577946', 
-                    'webim_unReadCount': '%7B%22time%22%3A1614996925159%2C%22dm_pub_total%22%3A0%2C%22chat_group_client%22%3A0%2C%22chat_group_notice%22%3A0%2C%22allcountNum%22%3A0%2C%22msgbox%22%3A0%7D', 
-                    'login_sid_t': 'a06dc228d9112a34076f7cffafa40e1e', 
                     '_ga': 'GA1.2.1528537132.1614996935', 
-                    '_gid': 'GA1.2.184499515.1614996935', 
                     '__gads': 'ID', 
-                    'wb_view_log': '1920*10801', 
-                    'cross_origin_proto': 'SSL', 
-                    'WBStorage': '8daec78e6a891122|undefined', 
-                    'SUB': '_2A25NQFvlDeRhGeBJ41oS8izNyjWIHXVuNMotrDV8PUNbmtAfLVOmkW9NRieR5n7GLeNomWPBLXN27bWZUDpUX4zt', 
-                    'SUBP': '0033WrSXqPxfM725Ws9jqgMF55529P9D9WWY8LoD_yQ7L1NOo1.hBwvF5JpX5KzhUgL.FoqN1hn0eozpeK.2dJLoI0YLxKBLB.zLBKBLxKBLB.2LB.2LxKnL1h5LBoeLxK.LBonLBKeLxKML1-2L1hBLxK-LB.qLB-zLxKBLBo.L1K5t', 
-                    'ALF': '1646616372', 
-                    'SSOLoginState': '1615080373', 
                     'wvr': '6', 
-                    'wb_view_log_6788322119': '1920*10801'
+                    'wb_view_log_6788322119': '1920*10801', 
+                    'wb_view_log': '1920*10801', 
+                    'SUBP': '0033WrSXqPxfM725Ws9jqgMF55529P9D9WWY8LoD_yQ7L1NOo1.hBwvF5JpX5KMhUgL.FoqN1hn0eozpeK.2dJLoI0YLxKBLB.zLBKBLxKBLB.2LB.2LxKnL1h5LBoeLxK.LBonLBKeLxKML1-2L1hBLxK-LB.qLB-zLxKBLBo.L1K5t', 
+                    'ALF': '1646686702', 
+                    'SSOLoginState': '1615150703', 
+                    'SCF': 'Ajb67KLHiO0qImsFIxRjQbd3nT_UmKemtUSu1f5jgN2VUa34Y_gS_ld0swTTGBq_hpRWtPcICXKZc1D9W8Xc5K0.', 
+                    'SUB': '_2A25NQU4hDeRhGeBJ41oS8izNyjWIHXVuNzjprDV8PUNbmtAfLXb4kW9NRieR5m_PL2pMQN1kYpX5PqGVAi8AdH8w', 
+                    '_s_tentry': 'login.sina.com.cn', 
+                    'Apache': '9579290975284.303.1615150710315', 
+                    'ULV': '1615150710320:3:3:1:9579290975284.303.1615150710315:1614983355253', 
+                    'webim_unReadCount': '%7B%22time%22%3A1615167003919%2C%22dm_pub_total%22%3A0%2C%22chat_group_client%22%3A0%2C%22chat_group_notice%22%3A0%2C%22allcountNum%22%3A2%2C%22msgbox%22%3A0%7D'
                     },
                     headers={
                         'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36'        
                     }
                     )
-        
-它突然又可以了。。。但是我发现虽然我可以不登陆用浏览器打开，但是如果不带cookie的话还是不行，所以最终还是得解决这个登陆问题。但是现在不急，实在解决不了我就手动加cookie = =
-然后现在的小问题是现在只能翻3页，因为3页之后会有一个大的跳转，next_page应该变成
-next_page_2=sel.xpath("//a[@action-type='click_more_comment']/@action-data").get()
-请问我应该怎样加加进去啊。。。
-我改成这样之后，他会给我a.1,a.2,a.3,b.3,c.3,d.3页这样子，但是我希望他可以123123这样循环
+            
+
+
+            
+# error message:
+# NEXT PAGE 1------------ None
+# NEXT PAGE 2------------ id=4610060338070136&root_comment_max_id=4610062918094481&root_comment_max_id_type=1&root_comment_ext_param=&page=1012&filter=hot&sum_comment_number=68819&filter_tips_before=1
+# NEXT PAGE URL 2------------ https://weibo.com/aj/v6/comment/big?ajwvr=6&id=4610060338070136&root_comment_max_id=4610062918094481&root_comment_max_id_type=1&root_comment_ext_param=&page=1012&filter=hot&sum_comment_number=68819&filter_tips_before=1&from=singleWeiBo&__rnd=1615172278608
+# 2021-03-07 21:57:59 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://weibo.com/aj/v6/comment/big?ajwvr=6&id=4610060338070136&root_comment_max_id=4610062918094481&root_comment_max_id_type=1&root_comment_ext_param=&page=1012&filter=hot&sum_comment_number=68819&filter_tips_before=1&from=singleWeiBo&__rnd=1615172278608> (referer: https://weibo.com/aj/v6/comment/big?ajwvr=6&id=4610060338070136&root_comment_max_id=4610062922028310&root_comment_max_id_type=1&root_comment_ext_param=&page=1011&filter=hot&sum_comment_number=68803&filter_tips_before=1&from=singleWeiBo&__rnd=1615172264803)
+# NEXT PAGE 1------------ None
+# NEXT PAGE 2------------ None
+# 2021-03-07 21:57:59 [scrapy.core.engine] INFO: Closing spider (finished)
